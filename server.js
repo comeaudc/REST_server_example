@@ -1,6 +1,7 @@
 // Imports
 import express from "express";
 import globalErr from "./middleware/globalErr.js";
+import logReq from "./middleware/logReq.js";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 
@@ -10,6 +11,7 @@ const PORT = 3000;
 
 // (Request) Middleware
 app.use(express.json()); // Parses the request body into JSON
+app.use(logReq);
 
 // Routes
 app.use("/api/users", userRoutes);
