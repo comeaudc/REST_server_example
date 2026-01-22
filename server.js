@@ -1,9 +1,9 @@
 // Imports
 import express from "express";
 import globalErr from "./middleware/globalErr.js";
+import userRoutes from "./routes/userRoutes.js";
 
 // Data
-import users from "./data/users.js";
 import posts from "./data/posts.js";
 
 // Setups
@@ -14,80 +14,7 @@ const PORT = 3000;
 app.use(express.json()); // Parses the request body into JSON
 
 // Routes
-// @route: GET /api/users
-// @desc: Show All Users Route
-app.get("/api/users", (req, res) => {
-  res.json(users);
-});
-
-// @route: POST /api/users
-// @desc: Create a new user
-app.post("/api/users", (req, res) => {
-  //Destructure the req.body
-  const { name, username, email } = req.body;
-
-  //checked we had all needed data
-  if (username && name && email) {
-    // checked if username already existed
-    if (users.find((user) => user.username == username)) {
-      res.json({ error: "Username Already Taken" });
-      return;
-    }
-
-    // Created new user with data
-    let newUser = {
-      id: users[users.length - 1].id + 1, //grabs the last user in DB and adds one to there id Number
-      ...req.body,
-    };
-
-    // added to db
-    users.push(newUser);
-
-    //responded to frontend
-    res.status(201).json({ "New User": newUser });
-  } else res.json({ error: "Insufficient Data" });
-});
-
-// @desc: Show One User Route
-app.get("/api/users/:id", (req, res, next) => {
-  let id = req.params.id;
-
-  let foundUser = users.find((user) => user.id == id);
-
-  if (foundUser) res.json(foundUser);
-  else next();
-});
-
-// @desc: Patch/Update User
-app.patch("/api/users/:id", (req, res, next) => {
-  // Within the PATCH request route, we allow the client
-  // to make changes to an existing user in the database.
-  const user = users.find((u, i) => {
-    if (u.id == req.params.id) {
-      for (const key in req.body) {
-        users[i][key] = req.body[key];
-      }
-      return true;
-    }
-  });
-
-  if (user) res.json(user);
-  else next();
-});
-
-//  @desc: Delete User
-app.delete("/api/users/:id", (req, res, next) => {
-  let id = req.params.id;
-
-  let deletedUser = users.find((user, index) => {
-    if (user.id == id) {
-      return users.splice(index, 1);
-    }
-  });
-
-  if (deletedUser) res.json({ DeletedUser: deletedUser });
-  else next();
-});
+app.use("/api/users", userRoutes);
 
 // @desc: Show All Posts Route
 app.get("/api/posts", (req, res) => {
@@ -156,7 +83,6 @@ app.delete("/api/posts/:id", (req, res, next) => {
   if (deletedPost) res.json({ DeletedPost: deletedPost });
   else next();
 });
-
 
 // Global Error Handling Middleware (err, req, res, next)
 app.use((req, res) => {

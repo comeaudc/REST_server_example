@@ -10,3 +10,10 @@
 -   Cacheable - we hate to state whether or not front end is allowed to save our data (being able to save is prefereable & is set by default)
 -   Layered System - security layering or proxy server/load balancing layer (more layers between you and the front end).
 -   (opt) Code on Demand - sending executable code to help users interact with our API.
+
+
+172 lines to start
+
+## Organizing Code:
+-   `express.Router()` - helps separate routes to a new file
+-   `router.route()` - combines similare routes
