@@ -1,10 +1,11 @@
 import users from "../data/users.js";
+import error from "../utilities/error.js";
 
 const getAll = (req, res) => {
   res.json(users);
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   //Destructure (pulled out individual properties as vraibles) the req.body
   const { name, username, email } = req.body;
 
@@ -12,8 +13,7 @@ const createUser = (req, res) => {
   if (username && name && email) {
     // checked if username already existed
     if (users.find((user) => user.username == username)) {
-      res.json({ error: "Username Already Taken" });
-      return;
+      return next(error(409, "Username Already Taken"));
     }
 
     // Created new user with data
@@ -27,7 +27,7 @@ const createUser = (req, res) => {
 
     //responded to frontend
     res.status(201).json({ "New User": newUser });
-  } else res.json({ error: "Insufficient Data" });
+  } else next(error(400, "Insufficient Data"))
 };
 
 const getOneUser = (req, res, next) => {

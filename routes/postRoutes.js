@@ -1,5 +1,6 @@
 import express from "express";
 import posts from "../data/posts.js";
+import error from "../utilities/error.js";
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ router
     res.json(posts);
   })
   // @desc: Create a new post
-  .post((req, res) => {
+  .post((req, res, next) => {
     //Destructure the req.body
     const { userId, title, content } = req.body;
 
@@ -28,10 +29,10 @@ router
 
       //responded to frontend
       res.status(201).json({ "New Post": newPost });
-    } else res.json({ error: "Insufficient Data" });
+    } else next(error(400, "Insufficient Data"));
   });
 
-  // @route: /api/posts/:id
+// @route: /api/posts/:id
 router
   .route("/:id")
   // @desc: Show One Post Route
