@@ -12,8 +12,6 @@
 -   (opt) Code on Demand - sending executable code to help users interact with our API.
 
 
-172 lines to start
-
 ## Organizing Code:
 -   `express.Router()` - helps separate routes to a new file
 -   `router.route()` - combines similare routes
